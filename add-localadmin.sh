@@ -53,6 +53,13 @@ chmod 644 /Users/$ADMIN_USERNAME/.ssh/authorized_keys
 # Configure and enable remote key auth ssh
 # ---------------------------------------------
 
-echo -e "\n\n#Managed Remote Access\nPermitRootLogin no\nPasswordAuthentication no" >> /etc/ssh/sshd_config
+SSHD_CONFIG=/etc/ssh/sshd_config
+
+echo "" >> $SSHD_CONFIG
+echo "# Managed Remote Access LWGMS" >> $SSHD_CONFIG
+echo "" >> $SSHD_CONFIG
+echo "PermitRootLogin no" >> $SSHD_CONFIG
+echo "PasswordAuthentication no" >> $SSHD_CONFIG
+
 systemsetup -setremotelogin on
 
