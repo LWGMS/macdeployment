@@ -8,15 +8,25 @@
 
 . /etc/rc.common
 
-PWD=
+# get passphrase
+while ! ${MATCH:-false}
+do
+	echo -en "Enter Passphrase   : "
+	read -rs PASS
+	echo -en "\nConfirm Passphrase : "
+	read -rs CONF
+	[ "$PASS" = "$CONF" ] \
+		&& { MATCH=true; echo -e "\n\nPassphrases matched.\n"; } \
+		|| echo -e "\n\nPassphrases didn't match--try again.\n"
+done
 
 LAST_ID=`dscl . -list /Users UniqueID | awk '{print $2}' | sort -n | tail -1`
 NEXT_ID=$((LAST_ID + 1))
 ADMIN_USERNAME=localadmin
 
-if [ -z $PWD ]
+if [ -z $PASS ]
 then
-  echo "missing password variable value (set PWD= in script)"
+  echo "missing password variable value (set PASS= in script)"
   exit
 fi
 
@@ -30,7 +40,7 @@ dscl . create /Users/$ADMIN_USERNAME
 dscl . create /Users/$ADMIN_USERNAME RealName "Administrative Account"
 dscl . create /Users/$ADMIN_USERNAME hint ""
 #dscl . create /Users/$ADMIN_USERNAME picture "/Path/To/Picture.png"
-dscl . passwd /Users/$ADMIN_USERNAME $PWD
+dscl . passwd /Users/$ADMIN_USERNAME $PASS
 dscl . create /Users/$ADMIN_USERNAME UniqueID $NEXT_ID
 dscl . create /Users/$ADMIN_USERNAME PrimaryGroupID 80
 dscl . create /Users/$ADMIN_USERNAME UserShell /bin/bash
