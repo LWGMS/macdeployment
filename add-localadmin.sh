@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 # ---------------------------------------------
 # create local administrative account on a macOS device
